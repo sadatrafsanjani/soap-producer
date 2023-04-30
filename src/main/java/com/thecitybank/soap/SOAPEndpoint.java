@@ -20,11 +20,14 @@ public class SOAPEndpoint {
     @ResponsePayload
     public SendResponse send(@RequestPayload SendT request) {
 
-        log.debug("Response: {}", request.toString());
+        log.info("Response: {}", request.getMessage().getBlock4());
 
         ObjectFactory factory = new ObjectFactory();
         SendResponse response = factory.createSendResponse();
-        response.setData(new ResultT());
+        ResultT test = new ResultT();
+        test.setCode("ACK");
+        test.setDatetime("ACK");
+        response.setData(test);
 
         return response;
     }
