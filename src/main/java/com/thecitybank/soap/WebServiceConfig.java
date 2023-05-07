@@ -25,11 +25,11 @@ public class WebServiceConfig extends WsConfigurerAdapter {
         return new ServletRegistrationBean(servlet, "/rtgs-service/GWClientSAService/*");
     }
 
-    @Bean(name="stpg")
+    @Bean(name="stpa")
     public Wsdl11Definition defaultWsdl11Definition() {
 
         SimpleWsdl11Definition wsdl11Definition = new SimpleWsdl11Definition();
-        wsdl11Definition.setWsdl(new ClassPathResource("stpg.wsdl"));
+        wsdl11Definition.setWsdl(new ClassPathResource("stpa.wsdl"));
 
         return wsdl11Definition;
     }
