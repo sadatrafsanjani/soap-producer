@@ -1,29 +1,25 @@
 package com.thecitybank.soap;
 
-import com.thecitybank.pojo.DataPDU;
 import com.thecitybank.producer.*;
 import com.thecitybank.utility.Constant;
 import lombok.extern.slf4j.Slf4j;
-import org.jdom2.Content;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.JDOMException;
-import org.jdom2.input.SAXBuilder;
-import org.jdom2.util.IteratorIterable;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
-import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.io.StringReader;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.logging.SimpleFormatter;
 
 
 @Slf4j
@@ -35,38 +31,44 @@ public class SOAPEndpoint {
     public SendResponse send(@RequestPayload SendT request) {
 
         String message = request.getMessage().getBlock4();
-        log.info("Response: {}", message);
+        log.info("Request: {}", message);
 
-        Document document =  convertStringToXml(message);
-
+        Document document = stringToDom(message);
+        Node body = document.getDocumentElement().getElementsByTagName("Body").item(0);
+        NodeList list = body.getChildNodes();
+        Node AppHdr = list.item(1);
+        String mir = AppHdr.getChildNodes().item(5).getTextContent().trim();
+        log.info("MIR: {}", mir);
 
 
         ObjectFactory factory = new ObjectFactory();
         SendResponse response = factory.createSendResponse();
         ResultT resultT = new ResultT();
-        resultT.setDatetime(new Date().toString());
+        resultT.setDatetime(toDate());
         resultT.setType(AckNakType.ACK);
-        resultT.setMir(request.getMessage().getMsgNetMir());
+        resultT.setMir(mir);
         response.setData(resultT);
+
+        log.info("Response: {}", response.toString());
 
         return response;
     }
 
-    private Document convertStringToXml(String xmlString) {
+    public Document stringToDom(String xmlSource) {
 
-        SAXBuilder sax = new SAXBuilder();
-
-        sax.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-        sax.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
         try {
-
-            Document doc = sax.build(new StringReader(xmlString));
-            return doc;
-
-        } catch (JDOMException | IOException e) {
-            throw new RuntimeException(e);
+            DocumentBuilder builder = factory.newDocumentBuilder();
+         return builder.parse(new InputSource(new StringReader(xmlSource)));
+        } catch (ParserConfigurationException | IOException | SAXException e) {
+         throw new RuntimeException(e);
         }
+    }
 
+    private String toDate(){
+
+        SimpleDateFormat formatter = new SimpleDateFormat("YYMMdd");
+        return formatter.format(new Date());
     }
 }

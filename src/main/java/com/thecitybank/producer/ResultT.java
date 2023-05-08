@@ -8,6 +8,8 @@
 
 package com.thecitybank.producer;
 
+import lombok.ToString;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -52,6 +54,7 @@ import javax.xml.bind.annotation.XmlType;
     "description",
     "info"
 })
+@ToString
 public class ResultT {
 
     @XmlElement(required = true)

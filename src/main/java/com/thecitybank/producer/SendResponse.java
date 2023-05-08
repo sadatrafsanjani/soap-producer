@@ -8,6 +8,8 @@
 
 package com.thecitybank.producer;
 
+import lombok.ToString;
+
 import javax.xml.bind.annotation.*;
 
 
@@ -35,6 +37,7 @@ import javax.xml.bind.annotation.*;
     "data"
 })
 @XmlRootElement(name = "sendResponse")
+@ToString
 public class SendResponse {
 
     @XmlElement(required = true)
