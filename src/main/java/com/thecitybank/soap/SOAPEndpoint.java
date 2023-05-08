@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.SimpleFormatter;
 
 
 @Slf4j
@@ -49,7 +48,7 @@ public class SOAPEndpoint {
         resultT.setMir(mir);
         response.setData(resultT);
 
-        log.info("Response: {}", response.toString());
+        log.info("Response: {}", response);
 
         return response;
     }
