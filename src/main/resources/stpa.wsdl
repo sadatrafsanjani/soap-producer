@@ -94,7 +94,7 @@
   </binding>
   <service name="GWClientSAService">
     <port binding="tns:GWClientSABinding" name="GWClientSAPort">
-      <soap:address location="http://172.25.9.155:8080/rtgs-service/GWClientSAService/stpa.wsdl"/>
+      <soap:address location="http://172.25.9.159:8080/rtgs-service/GWClientSAService/stpa.wsdl"/>
     </port>
   </service>
 </definitions>

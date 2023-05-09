@@ -39,7 +39,6 @@ public class SOAPEndpoint {
         String mir = AppHdr.getChildNodes().item(5).getTextContent().trim();
         log.info("MIR: {}", mir);
 
-
         ObjectFactory factory = new ObjectFactory();
         SendResponse response = factory.createSendResponse();
         ResultT resultT = new ResultT();
@@ -59,7 +58,7 @@ public class SOAPEndpoint {
 
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
-         return builder.parse(new InputSource(new StringReader(xmlSource)));
+            return builder.parse(new InputSource(new StringReader(xmlSource)));
         } catch (ParserConfigurationException | IOException | SAXException e) {
          throw new RuntimeException(e);
         }
